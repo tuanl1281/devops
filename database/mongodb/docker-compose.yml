@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  mongodb:
+    container_name: mongodb
+    image: mongo:4.4.10
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - MONGO_INITDB_ROOT_USERNAME=hr
+      - MONGO_INITDB_ROOT_PASSWORD=TitkulxVTJean
+    ports:
+      - 27017:27017
+    volumes:
+      - ./static:/data/db
+    networks:
+      - mongodb
+    restart: unless-stopped
+
+volumes:
+  mongodb:
+    driver: local
+    name: mongodb
+
+networks:
+  mongodb:
