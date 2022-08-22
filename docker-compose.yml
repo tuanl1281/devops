@@ -1,0 +1,40 @@
+version: '3.1'
+
+services:
+  elastic_search:
+    container_name: elastic_search
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.1
+    ports:
+      - 9200:9200
+    volumes:
+      - ./static:/usr/share/elasticsearchdata
+    environment:
+      - discovery.type=single-node
+      - xpack.monitoring.enabled=true
+      - xpack.watcher.enabled=false
+      - xpack.security.enabled=true
+      - xpack.security.audit.enabled=true
+      - ELASTIC_PASSWORD=eLastic@#!
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    networks:
+      - elastic
+
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:7.16.1
+    ports:
+      - 5601:5601
+    environment:
+      - ELASTICSEARCH_URL=http://elastic_search:9200
+      - ELASTICSEARCH_HOSTS=http://elastic_search:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=eLastic@#!
+    depends_on:
+      - elastic_search
+    networks:
+      - elastic
+
+networks:
+  elastic:
+    name: elastic
+    driver: bridge

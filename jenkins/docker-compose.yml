@@ -1,0 +1,19 @@
+version: '3.9'
+
+services:
+  jenkins:
+    container_name: jenkins_master
+    image: jenkins/jenkins:lts
+    ports:
+      - 8080:8080
+      - 50000:50000
+    volumes:
+      - ./static:/var/jenkins_home
+      - /usr/bin/docker:/usr/bin/docker
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/local/bin/docker-compose:/usr/local/bin/docker-compose
+    environment:
+      - JAVA_OPTS="-Xmx4096m"
+      - JENKINS_OPTS=" --handlerCountMax=300"
+    privileged: true
+    restart: unless-stopped
